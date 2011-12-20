@@ -397,6 +397,11 @@ class quadragalleryslider extends Module {
 			$titles[]= $query['title'];
 			$links[]= $query['link'];
 		}
+		$v_height = (Configuration::get('PS_QUADRA_SLIDER_HEIGHT')*20/100) + 20;
+		$box_height = $v_height*count($thumbs);
+		if($box_height < Configuration::get('PS_QUADRA_SLIDER_HEIGHT')){
+			$box_height = Configuration::get('PS_QUADRA_SLIDER_HEIGHT') + 20;
+		}
 		
 		$smarty->assign('imgs',$images);
 		$smarty->assign('thumbs',$thumbs);
@@ -405,8 +410,8 @@ class quadragalleryslider extends Module {
         $smarty->assign('jqZoomEnabled',Configuration::get('PS_DISPLAY_JQZOOM'));
         $smarty->assign('v_display',Configuration::get('PS_QUADRA_V_DISPLAY'));
         $smarty->assign('image_height',(Configuration::get('PS_QUADRA_SLIDER_HEIGHT')));
-        $smarty->assign('v_height',(Configuration::get('PS_QUADRA_SLIDER_HEIGHT')*20/100)+20);
-        $smarty->assign('box_height',((Configuration::get('PS_QUADRA_SLIDER_HEIGHT')*20/100)+20)*count($thumbs));
+        $smarty->assign('v_height',$v_height);
+        $smarty->assign('box_height',$box_height);
 		return $this->display(__FILE__, 'quadragalleryslider.tpl');
 	}
 	/*function hookTop($params){
