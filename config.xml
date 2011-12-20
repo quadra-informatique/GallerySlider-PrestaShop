@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>quadragalleryslider</name>
+	<displayName>Block Images Gallery Slider</displayName>
+	<version>1.0</version>
+	<description>Display thumbs of uploaded images in homepage, and show a slider of the images</description>
+	<author></author>
+	<tab></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
