@@ -50,7 +50,6 @@ ol.horinaja_pagination li a{
 	height:auto;
 	/*width:500px;ne depasse pas la taille du center column*/
 	z-index:0;
-	border: 1px solid;
 }
 .detail_image{
 	border: 1px dotted;
