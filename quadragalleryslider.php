@@ -1,4 +1,17 @@
 <?php
+/**
+ * ---------------------------------------------------------------------------------
+ *
+ * Quadragalleryslider module
+ * Developped for Prestashop 1.4 platform.
+ * You are not allowed to remove this header
+ *
+ * @author QUADRA INFORMATIQUE <ecommerce@quadra-informatique.fr>
+ * @copyright Quadra Informatique
+ * @version  Release: 1.1
+ *
+ * ---------------------------------------------------------------------------------
+ */
 class quadragalleryslider extends Module {
 	
 	protected $config = array();
