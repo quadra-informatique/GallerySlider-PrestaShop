@@ -40,7 +40,6 @@
 	</script>
 
 		<div id="homeslide" class="horinaja" {if $v_display eq 1}style="height:{$box_height}px;border: 1px solid;"{else} {if $thumbs neq ""} style="height:{$image_height+$v_height*3/2}px;border: 1px solid;"{/if} {/if}>
-			<!-- div id="big_picture" style="display:none;"></div-->
 			<ul id="" class="">
 				{foreach from=$thumbs key=idx item=curThumb}
 					<li {if $v_display eq 1} style="margin-top:{($box_height-$image_height)/2}px;"{else}style="margin-top:{$v_height}px;margin-bottom:{$v_height}px;"{/if}>
@@ -61,7 +60,6 @@
 			</ol>
 		</div>
 		<div class="clear"></div>
-	<!-- /div-->
 	<div id="description"></div>
 </div>
 
