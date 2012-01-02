@@ -18,7 +18,7 @@
 *
 *  @author Quadra Informatique <ecommerce@quadra-informatique.fr>
 *  @copyright  Quadra Informatique
-*  @version  Release: 1.1
+*  @version  Release:$Revision: 1.1 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
