@@ -391,8 +391,8 @@ class quadragalleryslider extends Module {
 
 	
 	function hookHome($params) {
-		global $smarty;
 		
+		global $smarty;
 		$datas = $this->select_all();
 		if(isset($datas)){
 			foreach($datas as $query){
@@ -411,7 +411,6 @@ class quadragalleryslider extends Module {
 			if($box_height < Configuration::get('PS_QUADRA_SLIDER_HEIGHT')){
 				$box_height = Configuration::get('PS_QUADRA_SLIDER_HEIGHT') + 20;
 			}
-			
 			
 	        $smarty->assign('jqZoomEnabled',Configuration::get('PS_DISPLAY_JQZOOM'));
 	        $smarty->assign('v_display',Configuration::get('PS_QUADRA_V_DISPLAY'));
