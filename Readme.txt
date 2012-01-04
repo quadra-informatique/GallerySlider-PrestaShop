@@ -14,7 +14,7 @@ LISEZ-MOI
 
 Ce module vous permet d'afficher un carousel sur la page d'accueil.
 
-Les images sont chargées dans le back office.
+Les images sont chargees dans le back office.
 
 Vous pouvez modifier la taille des images et ainsi gerer la taille du carousel que vous souhaitez afficher.
 
