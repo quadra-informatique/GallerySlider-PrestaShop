@@ -20,7 +20,7 @@ Vous pouvez modifier la taille des images et ainsi gérer la taille du carousel 
 
 Vous avez la possibilité d'afficher les miniatures au-dessus ou à droite des images en utilisant le bouton radio <Vertical display>.
 
-Après toutes modifications,sauvegarder votre configuration.
+Apr&egrave;s toutes modifications,sauvegarder votre configuration.
 
 
 
