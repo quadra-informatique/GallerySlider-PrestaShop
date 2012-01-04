@@ -16,11 +16,11 @@ Ce module vous permet d'afficher un carousel sur la page d'accueil.
 
 Les images sont chargées dans le back office.
 
-Vous pouvez modifier la taille des images et ainsi gérer la taille du carousel que vous souhaitiez afficher.
+Vous pouvez modifier la taille des images et ainsi gerer la taille du carousel que vous souhaitez afficher.
 
-Vous avez la possibilité d'afficher les miniatures au-dessus ou à droite des images en utilisant le bouton radio <Vertical display>.
+Vous avez la possibilite d'afficher les miniatures au-dessus ou a droite des images en utilisant le bouton radio <Vertical display>.
 
-Apr&egrave;s toutes modifications,sauvegarder votre configuration.
+Apres toutes modifications,sauvegarder votre configuration.
 
 
 
