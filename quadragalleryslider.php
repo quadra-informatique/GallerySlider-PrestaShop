@@ -331,7 +331,7 @@ class quadragalleryslider extends Module {
 			/**************/
 				$datas = $this->select_all();
 				if(isset($datas)){
-					foreach ($this->select_all() as $i => $row) {
+					foreach ($datas as $i => $row) {
 						$isFile2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['image']);
 						$isThumb2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['thumb']);
 						
