@@ -1,17 +1,4 @@
 <?php
-/**
- * ---------------------------------------------------------------------------------
- *
- * Quadragalleryslider module
- * Developped for Prestashop 1.4 platform.
- * You are not allowed to remove this header
- *
- * @author QUADRA INFORMATIQUE <ecommerce@quadra-informatique.fr>
- * @copyright Quadra Informatique
- * @version  Release: 1.1
- *
- * ---------------------------------------------------------------------------------
- */
 class quadragalleryslider extends Module {
 	
 	protected $config = array();
@@ -38,10 +25,10 @@ class quadragalleryslider extends Module {
 		
 		$queries = array();
 		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadra_galleryslider');
-		if(!isset($queries)){
-	        return false;
+		if(!empty($queries)){
+	        return $queries;
 		}
-		return $queries;
+		return NULL;
 	}
 	/**
 	 * create table galleryslider
@@ -191,18 +178,18 @@ class quadragalleryslider extends Module {
 	function resize_generated_images($_image,$width,$height){
 
 		$errors = array();
-		$dest_dir_big='/images_big/';
-		$dest_dir_small='/images_small/';
-		$tokens = explode('/',$_image);
-		$file = $tokens[9];
+		$dest_dir_big = str_replace('/images/','/images_big/',$_image);
+		$dest_dir_small= str_replace('/images/','/images_small/',$_image);
+		//$tokens = explode('/',$_image);
+		//$file = $tokens[9];
 		$thumb_size= 20/100;
-		if($file!= "" || $width!= ""|| $height != "" ){
+		if($width!= ""|| $height != "" ){
 			//big_image
-			if (!imageResize($_image,dirname(__FILE__).$dest_dir_big.$file,$width,$height)) {
+			if (!imageResize($_image,$dest_dir_big,$width,$height)) {
 				$errors[]=$this->l('An error occurred while generating the resize of big').' "'.$file.'"';
 			}
 			//small_image
-			if (!imageResize($_image,dirname(__FILE__).$dest_dir_small.$file,$thumb_size*$width,$thumb_size*$height)) {
+			if (!imageResize($_image,$dest_dir_small,$thumb_size*$width,$thumb_size*$height)) {
 				$errors[]=$this->l('An error occurred while generating the resize of small').' "'.$file.'"';
 			}
 		}
@@ -262,9 +249,9 @@ class quadragalleryslider extends Module {
 			$_POST['title'] = $row['title'];
 			$_POST['link'] = $row['link'];
 			$image_base = $row['image'];
-		
 			$tokens = explode('/',$image_base);
-			$_image = dirname(__FILE__)."/images/".$tokens[5];
+			$_image = dirname(__FILE__)."/images/".$tokens[5];//str_replace('/images_big/','/images/',$image_base);//
+
 			$this->resize_generated_images($_image,$_POST['width'],$_POST['height']);
 			$_POST['img']=_MODULE_DIR_."quadragalleryslider/images_big/".$tokens[5];
 			$_POST['thumb']=_MODULE_DIR_."quadragalleryslider/images_small/".$tokens[5];
@@ -312,7 +299,7 @@ class quadragalleryslider extends Module {
 
 	protected function _displayForm() {
 		// pour toujours avoir un champ pour ajouter
-		$isThumb = is_file($_SERVER['DOCUMENT_ROOT'].$this->config['thumb']);
+		//$isThumb = is_file($_SERVER['DOCUMENT_ROOT'].$this->config['thumb']);
 		$this->_html .= '
 		<form method="post" action="'.$_SERVER['REQUEST_URI'].'" enctype="multipart/form-data">
 			<fieldset>';
@@ -342,39 +329,41 @@ class quadragalleryslider extends Module {
 				</div>	
 				<hr class="clear"/>';
 			/**************/
-				
-				foreach ($this->select_all() as $i => $row) {
-					$isFile2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['image']);
-					$isThumb2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['thumb']);
-					
-					$this->_html .= '
-					<div style="float:left;">
-						'.($isThumb2 ? '<img src="'.$row['thumb'].'"name="thumb['.$i.']" alt="'.$row['title'].'" title="'.$row['title'].'"/>' : $this->l('Add') ).'
-					</div><div style="float:left;">
-						<label>'.$this->l('Image').'</label>
-						<div class="margin-form">
-							<input type="file" name="img'.$i.'" />
-							'.($isFile2 ? '<input type="hidden" name="img['.$i.']" value="'.$row['image'].'"/>' : '' ).'
+				$datas = $this->select_all();
+				if(isset($datas)){
+					foreach ($this->select_all() as $i => $row) {
+						$isFile2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['image']);
+						$isThumb2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['thumb']);
+						
+						$this->_html .= '
+						<div style="float:left;">
+							'.($isThumb2 ? '<img src="'.$row['thumb'].'"name="thumb['.$i.']" alt="'.$row['title'].'" title="'.$row['title'].'"/>' : $this->l('Add') ).'
+						</div><div style="float:left;">
+							<label>'.$this->l('Image').'</label>
+							<div class="margin-form">
+								<input type="file" name="img'.$i.'" />
+								'.($isFile2 ? '<input type="hidden" name="img['.$i.']" value="'.$row['image'].'"/>' : '' ).'
+							</div>
+							<label>'.$this->l('Image Title').'</label>
+							<div class="margin-form">
+								<input type="text" name="title['.$i.']" size="64" value="'.($row['title'] ? stripslashes(htmlspecialchars($row['title'])) : '').'" /></div>
+							<label>'.$this->l('Link').'</label>
+							<div class="margin-form">
+								<input type="text" name="link['.$i.']" size="64" value="'.($row['link'] ? stripslashes(htmlspecialchars($row['link'])) : '').'" />
+							</div>
+							<label>'.$this->l('Delete').'</label>
+							<div class="margin-form">
+								<input type="checkbox" name="suppr['.$i.']" />
+							</div>
 						</div>
-						<label>'.$this->l('Image Title').'</label>
-						<div class="margin-form">
-							<input type="text" name="title['.$i.']" size="64" value="'.($row['title'] ? stripslashes(htmlspecialchars($row['title'])) : '').'" /></div>
-						<label>'.$this->l('Link').'</label>
-						<div class="margin-form">
-							<input type="text" name="link['.$i.']" size="64" value="'.($row['link'] ? stripslashes(htmlspecialchars($row['link'])) : '').'" />
-						</div>
-						<label>'.$this->l('Delete').'</label>
-						<div class="margin-form">
-							<input type="checkbox" name="suppr['.$i.']" />
-						</div>
-					</div>
-					<hr class="clear"/>';
+						<hr class="clear"/>';
+					}
 				}
 			/***************/
 			
 			$this->_html .= '
 				<div style="float:left;">
-					'.($isThumb ? '<img src="'.$this->config['thumb'].'" alt="'.$this->config['title'].'" title="'.$this->config['title'].'"/>' : $this->l('Add') ).'
+					'.($this->l('Add') ).'
 				</div><div style="float:left;">
 					<label>'.$this->l('Image').'</label>
 					<div class="margin-form">
@@ -382,10 +371,10 @@ class quadragalleryslider extends Module {
 					</div>
 					<label>'.$this->l('Image Title').'</label>
 					<div class="margin-form">
-						<input type="text" name="title" size="64" value="'.($this->config['title'] ? stripslashes(($this->config['title'])) : '').'" /></div>
+						<input type="text" name="title" size="64" value="" /></div>
 					<label>'.$this->l('Link').'</label>
 					<div class="margin-form">
-						<input type="text" name="link" size="64" value="'.($this->config['link'] ? stripslashes(($this->config['link'])) : '').'" />
+						<input type="text" name="link" size="64" value="" />
 					</div>
 					<label>'.$this->l('Delete').'</label>
 					<div class="margin-form">
@@ -404,27 +393,32 @@ class quadragalleryslider extends Module {
 	function hookHome($params) {
 		global $smarty;
 		
-		foreach($this->select_all() as $query){
-			$images[]= $query['image'];
-			$thumbs[]= $query['thumb'];
-			$titles[]= $query['title'];
-			$links[]= $query['link'];
+		$datas = $this->select_all();
+		if(isset($datas)){
+			foreach($datas as $query){
+				$images[]= $query['image'];
+				$thumbs[]= $query['thumb'];
+				$titles[]= $query['title'];
+				$links[]= $query['link'];
+			}
+			$smarty->assign('imgs',$images);
+			$smarty->assign('thumbs',$thumbs);
+			$smarty->assign('titles',$titles);
+			$smarty->assign('links',$links);	
+			
+			$v_height = (Configuration::get('PS_QUADRA_SLIDER_HEIGHT')*20/100) + 20;
+			$box_height = $v_height*count($thumbs);
+			if($box_height < Configuration::get('PS_QUADRA_SLIDER_HEIGHT')){
+				$box_height = Configuration::get('PS_QUADRA_SLIDER_HEIGHT') + 20;
+			}
+			
+			
+	        $smarty->assign('jqZoomEnabled',Configuration::get('PS_DISPLAY_JQZOOM'));
+	        $smarty->assign('v_display',Configuration::get('PS_QUADRA_V_DISPLAY'));
+	        $smarty->assign('image_height',(Configuration::get('PS_QUADRA_SLIDER_HEIGHT')));
+	        $smarty->assign('v_height',$v_height);
+	        $smarty->assign('box_height',$box_height);
 		}
-		$v_height = (Configuration::get('PS_QUADRA_SLIDER_HEIGHT')*20/100) + 20;
-		$box_height = $v_height*count($thumbs);
-		if($box_height < Configuration::get('PS_QUADRA_SLIDER_HEIGHT')){
-			$box_height = Configuration::get('PS_QUADRA_SLIDER_HEIGHT') + 20;
-		}
-		
-		$smarty->assign('imgs',$images);
-		$smarty->assign('thumbs',$thumbs);
-		$smarty->assign('titles',$titles);
-		$smarty->assign('links',$links);
-        $smarty->assign('jqZoomEnabled',Configuration::get('PS_DISPLAY_JQZOOM'));
-        $smarty->assign('v_display',Configuration::get('PS_QUADRA_V_DISPLAY'));
-        $smarty->assign('image_height',(Configuration::get('PS_QUADRA_SLIDER_HEIGHT')));
-        $smarty->assign('v_height',$v_height);
-        $smarty->assign('box_height',$box_height);
 		return $this->display(__FILE__, 'quadragalleryslider.tpl');
 	}
 	/*function hookTop($params){
