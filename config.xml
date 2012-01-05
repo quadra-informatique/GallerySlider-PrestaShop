@@ -3,7 +3,7 @@
 	<name>quadragalleryslider</name>
 	<displayName>Block Images Gallery Slider</displayName>
 	<version>![CDATA[1]]</version>
-	<description>Display thumbs of uploaded images in homepage, and show a slider of the images</description>
+	<description>Display a slider of uploaded images on the homepage</description>
 	<author>![CDATA[Quadra Informatique]]</author>
 	<tab></tab>
 	<is_configurable>1</is_configurable>
