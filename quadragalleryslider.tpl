@@ -1,6 +1,6 @@
 <div id="quadragalleryslider">
-	<script type="text/javascript" src="{$base_dir}modules/quadragalleryslider/class.horinaja.query.js"></script>
-	<link rel="stylesheet" type="text/css" href="{$base_dir}modules/quadragalleryslider/horinaja.css" />
+	<script type="text/javascript" src="{$base_dir}modules/quadragalleryslider/js/class.horinaja.query.js"></script>
+	<link rel="stylesheet" type="text/css" href="{$base_dir}modules/quadragalleryslider/css/horinaja.css" />
 
          <!--FancyBox -->
          <script type="text/javascript" src="{$base_dir}js/jquery/jquery.easing.1.3.js"></script>
