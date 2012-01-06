@@ -4,9 +4,6 @@
 *
 * Quadragalleryslider module
 * 
-* Developped for Prestashop 1.4 platform.
-* You are not allowed to remove this header
-* 
 * NOTICE OF LICENSE
 *
 * This source file is subject to the Open Software License (OSL 3.0)
