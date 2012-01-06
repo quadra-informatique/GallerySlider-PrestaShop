@@ -1,3 +1,13 @@
+{*
+* QUADRA INFORMATIQUE
+*
+*  @author QUADRA INFORMATIQUE <ecommerce@quadra-informatique.fr>
+*  @copyright QUADRA INFORMATIQUE
+*  @version  Release: $Revision: 1.0 $
+*  @license  http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  
+*}
+
 <div id="quadragalleryslider">
 	<script type="text/javascript" src="{$base_dir}modules/quadragalleryslider/js/class.horinaja.query.js"></script>
 	<link rel="stylesheet" type="text/css" href="{$base_dir}modules/quadragalleryslider/css/horinaja.css" />
