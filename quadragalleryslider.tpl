@@ -18,7 +18,7 @@
 	<script type="text/javascript">
 	  $(document).ready(function(){
 		$('#homeslide').Horinaja({
-		capture:'homeslide',delai:0.9,
+		capture:'homeslide',delai:0.5,
 		duree:4,pagination:true});
 		});
 	</script>
@@ -32,6 +32,7 @@
 		                <a title="{$titles[$idx]|escape:'htmlall':'UTF-8'|stripslashes}" href="{$links[$idx]}" id="big_img_{$idx}">
 		                	<img src="{$imgs[$idx]}" class="detail_big_image" alt="" id="bigpic"/>
 		                </a>
+		                <div class="description">{$titles[$idx]|escape:'htmlall':'UTF-8'|stripslashes}</div>
 					</li>
 				{/foreach}
 			</ul>

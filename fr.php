@@ -2,8 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_edf02b3384f8fd2e0d5d408b7878e9c6'] = 'Carousel de gallerie d\'images';
-$_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_bf7882af2efa7960b51180680b434247'] = 'Affiche un carousel des images chargées sur la page d\'accueil';
+$_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_edf02b3384f8fd2e0d5d408b7878e9c6'] = 'Carrousel de gallerie d\'images';
+$_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_bf7882af2efa7960b51180680b434247'] = 'Affiche un carrousel des images chargées sur la page d\'accueil';
 $_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_8096e89c4a1d3e3036fcfe6cb5d0d0c6'] = 'L\'image ne peut etre effacer';
 $_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_3832f6deff5d50413adcbc9c06388c32'] = 'Type de fichier invalide';
 $_MODULE['<{quadragalleryslider}prestashop>quadragalleryslider_465ac27fb7e011be23f072a42d13524a'] = 'Une erreur s\'est produite lors du chargement de l\'image';

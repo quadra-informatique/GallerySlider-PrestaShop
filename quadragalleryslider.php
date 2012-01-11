@@ -243,6 +243,9 @@ class quadragalleryslider extends Module {
 			}
 		}
 		$this->delete_table();
+		Configuration::deleteByName('PS_QUADRA_SLIDER_HEIGHT');
+        Configuration::deleteByName('PS_QUADRA_SLIDER_WIDTH');
+        Configuration::deleteByName('PS_QUADRA_V_DISPLAY');
 		return parent::uninstall();
 	}
 

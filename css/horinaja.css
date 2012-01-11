@@ -54,3 +54,8 @@ ol.horinaja_pagination li a{
 .detail_image{
 	border: 1px dotted;
 }
+.description{
+	margin-left :20px;
+	font-size:12px;
+	font-weight:bold;
+}
