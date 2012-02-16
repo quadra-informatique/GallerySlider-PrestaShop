@@ -19,7 +19,7 @@
 	  $(document).ready(function(){
 		$('#homeslide').Horinaja({
 		capture:'homeslide',delai:0.5,
-		duree:4,pagination:true});
+		duree:2.5,pagination:true});
 		});
 	</script>
 	{/literal}
@@ -48,6 +48,5 @@
 		</div>
 		<div class="clear"></div>
 	<!-- /div-->
-	<div id="description"></div>
 </div>
 
