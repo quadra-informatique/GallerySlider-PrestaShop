@@ -66,7 +66,7 @@ class QuadraGallerySlider extends Module {
 		$sliders = $this->select_all();
 		if(isset($sliders)){
 			foreach($sliders as $slider){
-				$this->delete_row($slider['id_quadra_galleryslider']);
+				$this->delete_row($slider['id_quadragalleryslider']);
 				$this->remove_images($slider['image']);
 			}
 		}
@@ -83,7 +83,7 @@ class QuadraGallerySlider extends Module {
 	function select_all(){
 		
 		$queries = array();
-		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadra_galleryslider');
+		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider');
 		if(!empty($queries)){
 	        return $queries;
 		}
@@ -96,7 +96,7 @@ class QuadraGallerySlider extends Module {
 	function retrieve_data($id){
 		
 		$queries = array();
-		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadra_galleryslider WHERE id_quadra_galleryslider ='.$id);
+		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider WHERE id_quadragalleryslider ='.$id);
 		if(!empty($queries)){
 	        return $queries;
 		}
@@ -107,13 +107,13 @@ class QuadraGallerySlider extends Module {
 	 * @return unknown_type
 	 */
 	function create_table(){
-		$query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'quadra_galleryslider (
-				`id_quadra_galleryslider` int(10) NOT NULL AUTO_INCREMENT,
+		$query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'quadragalleryslider (
+				`id_quadragalleryslider` int(10) NOT NULL AUTO_INCREMENT,
 				`image` varchar(255) NOT NULL,
                 `thumb` varchar(255) NOT NULL,
                 `title` varchar(255) ,
                 `link`  varchar(255) ,
-				PRIMARY KEY  (`id_quadra_galleryslider`))
+				PRIMARY KEY  (`id_quadragalleryslider`))
 			ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3';
 
         if (!Db::getInstance()->Execute($query))
@@ -126,7 +126,7 @@ class QuadraGallerySlider extends Module {
 	 */
 	function delete_table(){
 
-		$query = 'DROP TABLE '. _DB_PREFIX_ .'quadra_galleryslider';
+		$query = 'DROP TABLE '. _DB_PREFIX_ .'quadragalleryslider';
 		if (!Db::getInstance()->Execute($query))
             return false;
         return true;
@@ -155,7 +155,7 @@ class QuadraGallerySlider extends Module {
 	function delete_row($id){
 		
 		$errors= array();
-		$query = 'DELETE FROM `'. _DB_PREFIX_ . 'quadra_galleryslider` WHERE id_quadra_galleryslider = '.'"'.$id.'"';
+		$query = 'DELETE FROM `'. _DB_PREFIX_ . 'quadragalleryslider` WHERE id_quadragalleryslider = '.'"'.$id.'"';
 		if (!Db::getInstance()->Execute($query))
 			return false;
 		return true;
@@ -166,7 +166,7 @@ class QuadraGallerySlider extends Module {
 	 */
 	function insert_data($id){
 		
-		$query = "INSERT INTO " . _DB_PREFIX_ . "quadra_galleryslider (image,thumb,title,link)
+		$query = "INSERT INTO " . _DB_PREFIX_ . "quadragalleryslider (image,thumb,title,link)
 		VALUES('".$_POST['img']."','".$_POST['thumb']."','".$_POST['title']."','".$_POST['link']."')";
 		if (!Db::getInstance()->Execute($query))
 			return false;
@@ -239,7 +239,7 @@ class QuadraGallerySlider extends Module {
 				$_POST['img']= str_replace("images","images_big",$_image);
 				$_POST['thumb']= str_replace("images","images_small",$_image);
 				//enlever l'ancienne ligne 
-				$this->delete_row($row['id_quadra_galleryslider']);
+				$this->delete_row($row['id_quadragalleryslider']);
 				//insertion des données dans la base
 				foreach(array_keys($_POST) as $key){
 					$this->insert_data($key);

@@ -28,7 +28,7 @@ class AdminGallerySlider extends AdminTab {
     private $module = 'quadragalleryslider';
 	
     public function __construct() {
-        $this->table = 'quadra_galleryslider';
+        $this->table = 'quadragalleryslider';
    		$this->className = 'QuadraGallerySlider';
         $this->edit = true;
         $this->delete = true;
@@ -264,7 +264,7 @@ public function displayListContent($token = NULL) {
 		
 		$this->_html = '
 		<form method="post" action="'.$currentIndex.'&token='.Tools::getValue('token').'" enctype="multipart/form-data">
-		<input type="hidden" name="id_slider" id="id_slider" value="'.Tools::getValue('id_quadra_galleryslider').'" />
+		<input type="hidden" name="id_slider" id="id_slider" value="'.Tools::getValue('id_quadragalleryslider').'" />
 		<fieldset>';
 		
 		if(Tools::isSubmit('add'.$this->table)){
@@ -295,7 +295,7 @@ public function displayListContent($token = NULL) {
 		}
 		else if(Tools::isSubmit('update'.$this->table)){
 			
-			$datas = quadragalleryslider::retrieve_data($_GET['id_quadra_galleryslider']);
+			$datas = quadragalleryslider::retrieve_data($_GET['id_quadragalleryslider']);
 			if(isset($datas)){
 				foreach ($datas as $i => $row) {
 					$isFile2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['image']);
@@ -332,7 +332,7 @@ public function displayListContent($token = NULL) {
     
 	public function postProcess($token = NULL) {
 		
-		$id_quadra_galleryslider = Tools::getValue('id_quadra_galleryslider');
+		$id_quadragalleryslider = Tools::getValue('id_quadragalleryslider');
 		$this->_displayForm();
 		
 		if(Tools::isSubmit('submitConfAdd'))
@@ -345,12 +345,10 @@ public function displayListContent($token = NULL) {
 			
 		}else if(Tools::isSubmit('delete'.$this->table))
 		{
-			$datas = quadragalleryslider::retrieve_data($id_quadra_galleryslider);
-			if(isset($datas)){
-				foreach($datas as $i => $row){
-					quadragalleryslider::delete_row($row['id_quadra_galleryslider']);
-					quadragalleryslider::remove_images($row['image']);
-				}
+			$datas = quadragalleryslider::retrieve_data($id_quadragalleryslider);
+			foreach($datas as $i => $row){
+				quadragalleryslider::delete_row($row['id_quadragalleryslider']);
+				quadragalleryslider::remove_images($row['image']);
 			}
 		}
         //return parent::postProcess();
