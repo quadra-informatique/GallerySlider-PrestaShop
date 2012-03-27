@@ -346,9 +346,11 @@ public function displayListContent($token = NULL) {
 		}else if(Tools::isSubmit('delete'.$this->table))
 		{
 			$datas = quadragalleryslider::retrieve_data($id_quadra_galleryslider);
-			foreach($datas as $i => $row){
-				quadragalleryslider::delete_row($row['id_quadra_galleryslider']);
-				quadragalleryslider::remove_images($row['image']);
+			if(isset($datas)){
+				foreach($datas as $i => $row){
+					quadragalleryslider::delete_row($row['id_quadra_galleryslider']);
+					quadragalleryslider::remove_images($row['image']);
+				}
 			}
 		}
         //return parent::postProcess();

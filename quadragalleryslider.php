@@ -20,6 +20,7 @@
  *
  * ---------------------------------------------------------------------------------
 */
+
 class QuadraGallerySlider extends Module {
 	
 	protected $config = array();
@@ -134,10 +135,9 @@ class QuadraGallerySlider extends Module {
 	 * remove images from folder images,images_big,images_small
 	 */
 	function remove_images($image){
-		
+
 		$thumb_image = str_replace("big","small",$image);
-		$tokens = explode('/',$image);
-		$_image_original =_MODULE_DIR_."quadragalleryslider/images/".$tokens[5];
+		$_image_original = str_replace("images_big","images",$image);
 		if (!unlink($_SERVER['DOCUMENT_ROOT'].$image)){
 			$errors[]=$this->l('Can\'t delete images').$image;
 		}
@@ -226,22 +226,25 @@ class QuadraGallerySlider extends Module {
 	 */
 	function generate_images(){
 		
-		foreach($this->select_all() as $row){
-			$_POST['title'] = $row['title'];
-			$_POST['link'] = $row['link'];
-			$image_base = $row['image'];
-			$tokens = explode('/',$image_base);
-			$_image = dirname(__FILE__)."/images/".$tokens[5];
+		$datas = $this->select_all();
+		if(isset($datas)){
+			foreach($datas as $row){
+				$_POST['title'] = $row['title'];
+				$_POST['link'] = $row['link'];
+				$image_base = $row['image'];
+				$_image = _PS_ROOT_DIR_.str_replace("images_big","images",$image_base);
 
-			$this->resize_generated_images($_image,$_POST['width'],$_POST['height']);
-			$_POST['img']=_MODULE_DIR_."quadragalleryslider/images_big/".$tokens[5];
-			$_POST['thumb']=_MODULE_DIR_."quadragalleryslider/images_small/".$tokens[5];
-			//enlever l'ancienne ligne 
-			$this->delete_row($row['id_quadra_galleryslider']);
-			//insertion des données dans la base
-			foreach(array_keys($_POST) as $key){
-				$this->insert_data($key);
-				break;
+				$this->resize_generated_images($_image,$_POST['width'],$_POST['height']);
+				$_image = str_replace(_PS_ROOT_DIR_,"",$_image);
+				$_POST['img']= str_replace("images","images_big",$_image);
+				$_POST['thumb']= str_replace("images","images_small",$_image);
+				//enlever l'ancienne ligne 
+				$this->delete_row($row['id_quadra_galleryslider']);
+				//insertion des données dans la base
+				foreach(array_keys($_POST) as $key){
+					$this->insert_data($key);
+					break;
+				}
 			}
 		}
 	}
