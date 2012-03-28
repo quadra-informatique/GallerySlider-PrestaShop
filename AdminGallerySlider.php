@@ -120,8 +120,7 @@ class AdminGallerySlider extends AdminTab {
 		$rows = quadragalleryslider::retrieve_data($id);
 		foreach($rows as $row){
 			$image_base = $row['image'];
-			$tokens = explode('/',$image_base);
-			//$_image = dirname(__FILE__)."/images/".$tokens[5];
+			$_image = _PS_ROOT_DIR_.str_replace("images_big","images",$image_base);
 		}
 		if($NewFile != ""){
 			$this->resize_images($_FILES,Configuration::get('PS_QUADRA_SLIDER_WIDTH'),Configuration::get('PS_QUADRA_SLIDER_HEIGHT'));
@@ -130,10 +129,10 @@ class AdminGallerySlider extends AdminTab {
 				$_POST['thumb']=_MODULE_DIR_."quadragalleryslider/images_small/".basename($_FILES['img']['name']);
 			}
 		}else{
-			$_POST['img']=_MODULE_DIR_."quadragalleryslider/images_big/".$tokens[5];
-			$_POST['thumb']=_MODULE_DIR_."quadragalleryslider/images_small/".$tokens[5];
+			$_image = str_replace(_PS_ROOT_DIR_,"",$_image);
+			$_POST['img']= str_replace("images","images_big",$_image);
+			$_POST['thumb']= str_replace("images","images_small",$_image);
 		}
-			
 		foreach($_POST['title'] as $title){
 			$_POST['title'] = $title;
 		}
@@ -183,24 +182,20 @@ class AdminGallerySlider extends AdminTab {
 			$this->displayWarning($this->l('Bad SQL query'));
 			return false;
 		}
-
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader();
 		if (!sizeof($this->_list))
 			echo '<tr><td class="center" colspan="'.(sizeof($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
-
 		/* Show the content of the table */
 		$this->displayListContent();
-
 		/* Close list table and submit button */
 		$this->displayListFooter();
 	}
 	
-public function displayListContent($token = NULL) {
+	public function displayListContent($token = NULL) {
     
     	global $currentIndex, $cookie;
     	$id_lang = $cookie->id_lang;
-    	
     	$id_category = 1; // default categ
 
         $irow = 0;
@@ -255,7 +250,6 @@ public function displayListContent($token = NULL) {
 	      		   echo '</tr>';
             }
         }
-                
     }
 		    
 	protected function _displayForm() {

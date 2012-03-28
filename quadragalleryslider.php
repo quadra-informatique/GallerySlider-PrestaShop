@@ -32,7 +32,6 @@ class QuadraGallerySlider extends Module {
 		$this->name = 'quadragalleryslider';
 		$this->tab = '';
 		$this->version = '1.0';
-
 		parent::__construct();
 
 		$this->displayName = $this->l('Block Images Gallery Slider');
@@ -107,6 +106,7 @@ class QuadraGallerySlider extends Module {
 	 * @return unknown_type
 	 */
 	function create_table(){
+
 		$query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'quadragalleryslider (
 				`id_quadragalleryslider` int(10) NOT NULL AUTO_INCREMENT,
 				`image` varchar(255) NOT NULL,
