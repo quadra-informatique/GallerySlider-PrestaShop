@@ -251,7 +251,49 @@ class AdminGallerySlider extends AdminTab {
             }
         }
     }
-		    
+
+	public function display()
+	{
+		global $currentIndex, $cookie;
+
+		// Include other tab in current tab
+		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))){}
+
+		// Include current tab
+		elseif ((Tools::getValue('submitAdd'.$this->table) AND sizeof($this->_errors)) OR isset($_GET['add'.$this->table]))
+		{
+			if ($this->tabAccess['add'] === '1')
+			{
+				$this->displayForm();
+				if ($this->tabAccess['view'])
+					echo '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : $currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+			}
+			else
+				echo $this->l('You do not have permission to add here');
+		}
+		elseif (isset($_GET['update'.$this->table]))
+		{
+			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $cookie->id_employee == Tools::getValue('id_employee')))
+			{
+				$this->displayForm();
+				if ($this->tabAccess['view'])
+					echo '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : $currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+			}
+			else
+				echo $this->l('You do not have permission to edit here');
+		}
+		elseif (isset($_GET['view'.$this->table]))
+			$this->{'view'.$this->table}();
+
+		else
+		{
+			$this->getList((int)($cookie->id_lang));
+			$this->displayList();
+			$this->displayOptionsList();
+			$this->displayRequiredFields();
+			$this->includeSubTab('display');
+		}
+	}
 	protected function _displayForm() {
 		
 		global $currentIndex;

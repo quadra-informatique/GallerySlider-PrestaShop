@@ -10,8 +10,12 @@ $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_465ac27fb7e011be23
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_5a745e9e018bcf349109ab2ae05c14d2'] = 'Erreur lors de la génération de la grande image';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_cbc3c52fad9eade06d83220c0d58f3c0'] = 'Erreur lors de la génération de la petite image';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ef61fb324d729c341ea8ab9901e23566'] = 'Ajouter un nouveau';
-$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ee77ea46b0c548ed60eadf31bdd68613'] = 'Mauvaise requête SQL';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ee77ea46b0c548ed60eadf31bdd68613'] = 'Mauvaise requête SQL ';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_5ece607071fe59ddc4c88dc6abfe2310'] = 'Aucun éléments trouvés';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_0557fa923dcee4d0f86b1409f5c2167f'] = 'Retour';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_630f6dc397fe74e52d5189e2c80f282b'] = 'Retour à la liste';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_32397e87e6e403cbad4f3d26385ad6ef'] = 'Vous n\'avez pas la permission d\'ajouter ici';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ddcaee4edc8938535941b620ae5ec359'] = 'Vous n\'avez pas la permission d\'editer ici';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ec211f7c20af43e742bf2570c3cb84f9'] = 'Ajouter';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_be53a0541a6d36f6ecb879fa2c584b08'] = 'Image';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_705650e9ab808035ee18d703f971c3f2'] = 'Titre de l\'image';
