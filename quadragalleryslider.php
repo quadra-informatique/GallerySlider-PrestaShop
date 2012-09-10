@@ -389,7 +389,7 @@ class QuadraGallerySlider extends Module {
 		
 		$v_height = (Configuration::get('PS_QUADRA_SLIDER_HEIGHT')*20/100) + 20;
 		$box_height = $v_height*count($thumbs);
-		if($box_height < Configuration::get('PS_QUADRA_SLIDER_HEIGHT')){
+		if($box_height!= 0 && $box_height < Configuration::get('PS_QUADRA_SLIDER_HEIGHT')){
 			$box_height = Configuration::get('PS_QUADRA_SLIDER_HEIGHT') + 40;
 		}
         $smarty->assign('jqZoomEnabled',Configuration::get('PS_DISPLAY_JQZOOM'));
