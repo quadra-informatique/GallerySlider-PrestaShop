@@ -2,6 +2,7 @@
 .horinaja{
 	overflow: hidden;
 	position: relative;
+	margin-bottom: 5px;
 }	
 .horinaja ul{
 	position:relative;
@@ -54,15 +55,8 @@ ol.horinaja_pagination li a{
 .detail_image{
 	border: 1px dotted;
 }
-<<<<<<< .mine
-.description{
-	margin-left :20px;
-	font-size:12px;
-	font-weight:bold;
-}=======
 .description{
 	margin-left :20px;
 	font-size:12px;
 	font-weight:bold;
 }
->>>>>>> .r21633

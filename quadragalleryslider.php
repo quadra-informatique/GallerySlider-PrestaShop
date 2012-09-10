@@ -32,6 +32,8 @@ class QuadraGallerySlider extends Module {
 		$this->name = 'quadragalleryslider';
 		$this->tab = '';
 		$this->version = '1.0';
+		$this->module_key = "f6f656f46178481af36fde4d8e95821e";
+
 		parent::__construct();
 
 		$this->displayName = $this->l('Block Images Gallery Slider');
@@ -42,7 +44,7 @@ class QuadraGallerySlider extends Module {
 		
 		$tab = new Tab();
         $tab->id_parent = 1;
-        $tab->name = array(Language::getIdByIso('fr') => 'Carrousel d\'images');
+        $tab->name = array(Language::getIdByIso('fr') => 'Carrousel d\'images',Language::getIdByIso('en') => 'Images carrousel');
         $tab->class_name = 'AdminGallerySlider';
         $tab->module = 'quadragalleryslider';
         $tab->add();
@@ -54,7 +56,7 @@ class QuadraGallerySlider extends Module {
         Configuration::updateValue('PS_QUADRA_SLIDER_WIDTH', 500);
         Configuration::updateValue('PS_QUADRA_V_DISPLAY', 0);
 		//creation de la table
-		$this->create_table();
+		$this->createTable();
             			
 		return $this->registerHook('home');
 	}
@@ -62,79 +64,127 @@ class QuadraGallerySlider extends Module {
 	function uninstall() {
 		
 		$this->uninstallModuleTab('AdminGallerySlider');
-		$sliders = $this->select_all();
+		$sliders = $this->selectAll();
 		if(isset($sliders)){
 			foreach($sliders as $slider){
-				$this->delete_row($slider['id_quadragalleryslider']);
-				$this->remove_images($slider['image']);
+				$this->deleteRow($slider['id_quadragalleryslider']);
+				$this->removeImages($slider['image']);
 			}
 		}
-		$this->delete_table();
+		$this->deleteTable();
 		Configuration::deleteByName('PS_QUADRA_SLIDER_HEIGHT');
         Configuration::deleteByName('PS_QUADRA_SLIDER_WIDTH');
         Configuration::deleteByName('PS_QUADRA_V_DISPLAY');
 		return parent::uninstall();
 	}
 	/**
-	 * all images saved in database
-	 * @return unknown_type
+	 * select all informations
+	 * @return array
 	 */
-	function select_all(){
+	function selectAll(){
 		
 		$queries = array();
-		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider');
+		$queries = Db::getInstance()->ExecuteS(
+						'SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider as a
+						LEFT JOIN `'._DB_PREFIX_.'quadragalleryslider_lang`as i ON (i.`id_quadragalleryslider` = a.`id_quadragalleryslider`)'
+						
+		);
 		if(!empty($queries)){
 	        return $queries;
 		}
 		return NULL;
 	}
 	/**
-	 * informations as per id
-	 * @return unknown_type
+	 * Select all titles and links
+	 * @param $id
+	 * @return array
 	 */
-	function retrieve_data($id){
+	function selectForAllLanguages($id){
 		
 		$queries = array();
-		$queries = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider WHERE id_quadragalleryslider ='.$id);
+		$queries = Db::getInstance()->ExecuteS(
+					'SELECT * FROM `'._DB_PREFIX_.'quadragalleryslider_lang` WHERE id_quadragalleryslider ='.$id );
 		if(!empty($queries)){
 	        return $queries;
 		}
 		return NULL;
 	}
 	/**
-	 * create table galleryslider
+	 * Select all items 
+	 * @param $id
+	 * @return array
+	 */
+	function selectAllImages(){
+		
+		$queries = array();
+		$queries = Db::getInstance()->ExecuteS(
+					'SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider');
+		if(!empty($queries)){
+	        return $queries;
+		}
+		return NULL;
+	}
+	/**
+	 * retrieve image and thum for a given id
+	 * @param $id
+	 * @return array
+	 */
+	function retrieveData($id){
+		
+		$queries = array();
+		$queries = Db::getInstance()->ExecuteS('
+					SELECT * FROM ' . _DB_PREFIX_ . 'quadragalleryslider 
+					WHERE id_quadragalleryslider ='.$id);
+		if(!empty($queries)){
+	        return $queries;
+		}
+		return NULL;
+	}
+	/**
+	 * create tables 
 	 * @return unknown_type
 	 */
-	function create_table(){
-
+	function createTable(){
 		$query = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'quadragalleryslider (
 				`id_quadragalleryslider` int(10) NOT NULL AUTO_INCREMENT,
 				`image` varchar(255) NOT NULL,
                 `thumb` varchar(255) NOT NULL,
-                `title` varchar(255) ,
-                `link`  varchar(255) ,
 				PRIMARY KEY  (`id_quadragalleryslider`))
 			ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3';
+		
+		$query2 = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'quadragalleryslider_lang (
+				`id_quadragalleryslider` int(10) NOT NULL,
+				`id_lang` int(10) NOT NULL,
+                `title` varchar(255) ,
+                `link`  varchar(255) ,
+                PRIMARY KEY (`id_quadragalleryslider`,`id_lang`),
+  				KEY `id_lang` (`id_lang`))
+			ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3';
 
-        if (!Db::getInstance()->Execute($query))
+        if (!Db::getInstance()->Execute($query) ||!Db::getInstance()->Execute($query2))
             return false;
         return true;    
 	}
 	/**
-	 * delete table from database
+	 * delete tables from database
 	 * @return unknown_type
 	 */
-	function delete_table(){
+	function deleteTable(){
 
 		$query = 'DROP TABLE '. _DB_PREFIX_ .'quadragalleryslider';
-		if (!Db::getInstance()->Execute($query))
+		
+		$query2 = 'DROP TABLE '. _DB_PREFIX_ .'quadragalleryslider_lang';
+		
+		if (!Db::getInstance()->Execute($query)||!Db::getInstance()->Execute($query2))
             return false;
         return true;
 	}
 	/**
 	 * remove images from folder images,images_big,images_small
+	 * @param $image
+	 * @return unknown_type
 	 */
-	function remove_images($image){
+	function removeImages($image){
 
 		$thumb_image = str_replace("big","small",$image);
 		$_image_original = str_replace("images_big","images",$image);
@@ -149,27 +199,47 @@ class QuadraGallerySlider extends Module {
 		}
 	}
 	/**
-	 * delete a row in the database
+	 * delete a row for the given id
+	 * @param $id
 	 * @return unknown_type
 	 */
-	function delete_row($id){
+	function deleteRow($id){
 		
-		$errors= array();
+		$languages = Language::getLanguages(false);
+		
 		$query = 'DELETE FROM `'. _DB_PREFIX_ . 'quadragalleryslider` WHERE id_quadragalleryslider = '.'"'.$id.'"';
-		if (!Db::getInstance()->Execute($query))
+		
+		foreach($languages as $language){
+			$query2 = 'DELETE FROM `'. _DB_PREFIX_ . 'quadragalleryslider_lang` WHERE id_quadragalleryslider = '.'"'.$id.'"';
+		}
+		if (!Db::getInstance()->Execute($query) || !Db::getInstance()->Execute($query2))
 			return false;
 		return true;
 	}
 	/**
 	 * insert an image in database
+	 * @param $id
 	 * @return unknown_type
-	 */
-	function insert_data($id){
+	 */	
+	function insertData(){
 		
-		$query = "INSERT INTO " . _DB_PREFIX_ . "quadragalleryslider (image,thumb,title,link)
-		VALUES('".$_POST['img']."','".$_POST['thumb']."','".$_POST['title']."','".$_POST['link']."')";
-		if (!Db::getInstance()->Execute($query))
-			return false;
+		$languages = Language::getLanguages(false);
+		
+		Db::getInstance()->Execute("INSERT INTO " . _DB_PREFIX_ . "quadragalleryslider (image,thumb)
+									VALUES(
+										'".$_POST['img']."',
+										'".$_POST['thumb']."')");
+		
+		$lastId = Db::getInstance()->getRow("SELECT id_quadragalleryslider FROM " . _DB_PREFIX_ . "quadragalleryslider ORDER BY id_quadragalleryslider DESC");
+		
+		foreach($languages as $language){
+			Db::getInstance()->Execute("INSERT INTO " . _DB_PREFIX_ . "quadragalleryslider_lang (id_quadragalleryslider,id_lang,title,link)
+						VALUES(
+							'".$lastId['id_quadragalleryslider']."',
+							'".$language['id_lang']."',
+							'".$_POST['title_'.$language['id_lang']]."',
+							'".$_POST['link_'.$language['id_lang']]."')");	
+		}
 		return true;	
 	}
 	/**
@@ -179,7 +249,7 @@ class QuadraGallerySlider extends Module {
 	 * @param $height
 	 * @return unknown_type
 	 */
-	function resize_generated_images($_image,$width,$height){
+	function resizeGeneratedImages($_image,$width,$height){
 
 		$errors = array();
 		$dest_dir_big = str_replace('/images/','/images_big/',$_image);
@@ -188,11 +258,11 @@ class QuadraGallerySlider extends Module {
 		if($width!= ""|| $height != "" ){
 			//big_image
 			if (!imageResize($_image,$dest_dir_big,$width,$height)) {
-				$errors[]=$this->l('An error occurred while generating the resize of big').' "'.$file.'"';
+				$errors[]=$this->l('An error occurred while generating the resize of big');
 			}
 			//small_image
 			if (!imageResize($_image,$dest_dir_small,$thumb_size*$width,$thumb_size*$height)) {
-				$errors[]=$this->l('An error occurred while generating the resize of small').' "'.$file.'"';
+				$errors[]=$this->l('An error occurred while generating the resize of small');
 			}
 		}
 		if(isset($errors)){
@@ -224,27 +294,33 @@ class QuadraGallerySlider extends Module {
 	 * regenerate images
 	 * @return unknown_type
 	 */
-	function generate_images(){
+	function generateImages(){
 		
-		$datas = $this->select_all();
+		$datas = $this->selectAllImages();
+		
+		$languages = Language::getLanguages(false);
 		if(isset($datas)){
 			foreach($datas as $row){
-				$_POST['title'] = $row['title'];
-				$_POST['link'] = $row['link'];
+				$texts = $this->selectForAllLanguages($row['id_quadragalleryslider']);
+				foreach ($texts as $text) {
+					foreach($languages as $language){
+						if($language['id_lang']== $text['id_lang']){
+							$_POST['title_'.$language['id_lang']] = $text['title'];
+							$_POST['link_'.$language['id_lang']] = $text['link'];
+						}	
+					}
+				}	
 				$image_base = $row['image'];
 				$_image = _PS_ROOT_DIR_.str_replace("images_big","images",$image_base);
 
-				$this->resize_generated_images($_image,$_POST['width'],$_POST['height']);
+				$this->resizeGeneratedImages($_image,$_POST['width'],$_POST['height']);
 				$_image = str_replace(_PS_ROOT_DIR_,"",$_image);
 				$_POST['img']= str_replace("images","images_big",$_image);
 				$_POST['thumb']= str_replace("images","images_small",$_image);
 				//enlever l'ancienne ligne 
-				$this->delete_row($row['id_quadragalleryslider']);
+				$this->deleteRow($row['id_quadragalleryslider']);
 				//insertion des données dans la base
-				foreach(array_keys($_POST) as $key){
-					$this->insert_data($key);
-					break;
-				}
+				$this->insertData();
 			}
 		}
 	}
@@ -260,7 +336,7 @@ class QuadraGallerySlider extends Module {
 		}
 		Configuration::updateValue('PS_QUADRA_SLIDER_HEIGHT', $_POST['height']);
         Configuration::updateValue('PS_QUADRA_SLIDER_WIDTH', $_POST['width']);
-		$this->generate_images();
+		$this->generateImages();
 	}
 
 	protected function _displayForm() {
@@ -294,14 +370,16 @@ class QuadraGallerySlider extends Module {
 	
 	function hookHome($params) {
 		
-		global $smarty;
-		$datas = $this->select_all();
+		global $smarty,$cookie;
+		$datas = $this->selectAll();
 		if(isset($datas) || $datas != "NULL"){
 			foreach($datas as $query){
-				$images[]= $query['image'];
-				$thumbs[]= $query['thumb'];
-				$titles[]= $query['title'];
-				$links[]= $query['link'];
+				if($cookie->id_lang == $query['id_lang']){
+					$images[]= $query['image'];
+					$thumbs[]= $query['thumb'];
+					$titles[]= $query['title'];
+					$links[]= $query['link'];
+				}	
 			}
 		}	
 		$smarty->assign('imgs',$images);

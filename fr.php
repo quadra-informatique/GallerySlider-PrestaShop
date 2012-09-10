@@ -16,6 +16,8 @@ $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_0557fa923dcee4d0f8
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_630f6dc397fe74e52d5189e2c80f282b'] = 'Retour à la liste';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_32397e87e6e403cbad4f3d26385ad6ef'] = 'Vous n\'avez pas la permission d\'ajouter ici';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ddcaee4edc8938535941b620ae5ec359'] = 'Vous n\'avez pas la permission d\'editer ici';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_6adab6d3fdf92c448d60cf8824e4851c'] = 'Effacer la sélection';
+$_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_e25f0ecd41211b01c83e5fec41df4fe7'] = 'Effacer les éléments selectionnés?';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_ec211f7c20af43e742bf2570c3cb84f9'] = 'Ajouter';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_be53a0541a6d36f6ecb879fa2c584b08'] = 'Image';
 $_MODULE['<{quadragalleryslider}prestashop>admingalleryslider_705650e9ab808035ee18d703f971c3f2'] = 'Titre de l\'image';

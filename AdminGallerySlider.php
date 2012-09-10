@@ -38,6 +38,9 @@ class AdminGallerySlider extends AdminTab {
 			'title' => array('title' => $this->l('TITLE'), 'width' => 220, 'filter_key' => 'b!name'),
 			'link' => array('title' => $this->l('LINK'), 'width' => 220, 'filter_key' => 'b!name')
         );
+        
+        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'quadragalleryslider_lang` i ON (i.`id_quadragalleryslider` = a.`id_quadragalleryslider`)';
+        $this->_select = 'i.`id_lang`,i.`title`,i.`link`';
         parent::__construct();
     }
 	/**
@@ -68,7 +71,6 @@ class AdminGallerySlider extends AdminTab {
         if($error == "") 
         {
 	        $file = strtr($file,'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ','AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-	        //$file = preg_replace('/([^.a-z0-9]+)/i', '-', $file);
             $dest=dirname(__FILE__).$directory.$file ;                  
 	        if(!move_uploaded_file($_FILES['img']['tmp_name'], $dest)) 
 	        {
@@ -84,7 +86,7 @@ class AdminGallerySlider extends AdminTab {
 	 * @param $height
 	 * @return unknown_type
 	 */
-	function resize_images($_FILES,$width,$height){
+	function resizeImages($_FILES,$width,$height){
 		
 		$source= $this->controlUpload($_FILES);
 		$errors = array();
@@ -106,7 +108,6 @@ class AdminGallerySlider extends AdminTab {
 			return $errors;
 		}
 	}
-	
 	/**
 	 * action of the button resize images
 	 * @return unknown_type
@@ -117,13 +118,13 @@ class AdminGallerySlider extends AdminTab {
 			$_FILES['img'] = $_FILES['img0'];
 		}
 		$NewFile = basename($_FILES['img']['name']);
-		$rows = quadragalleryslider::retrieve_data($id);
+		$rows = quadragalleryslider::retrieveData($id);
 		foreach($rows as $row){
 			$image_base = $row['image'];
 			$_image = _PS_ROOT_DIR_.str_replace("images_big","images",$image_base);
 		}
 		if($NewFile != ""){
-			$this->resize_images($_FILES,Configuration::get('PS_QUADRA_SLIDER_WIDTH'),Configuration::get('PS_QUADRA_SLIDER_HEIGHT'));
+			$this->resizeImages($_FILES,Configuration::get('PS_QUADRA_SLIDER_WIDTH'),Configuration::get('PS_QUADRA_SLIDER_HEIGHT'));
 			foreach(array_keys($_FILES) as $key) {
 				$_POST['img']=_MODULE_DIR_."quadragalleryslider/images_big/".basename($_FILES['img']['name']);
 				$_POST['thumb']=_MODULE_DIR_."quadragalleryslider/images_small/".basename($_FILES['img']['name']);
@@ -133,34 +134,22 @@ class AdminGallerySlider extends AdminTab {
 			$_POST['img']= str_replace("images","images_big",$_image);
 			$_POST['thumb']= str_replace("images","images_small",$_image);
 		}
-		foreach($_POST['title'] as $title){
-			$_POST['title'] = $title;
-		}
-		foreach($_POST['link'] as $link){
-			$_POST['link'] = $link;
-		}
-			//enlever l'ancienne ligne 
-		quadragalleryslider::delete_row($id);
+		//enlever l'ancienne ligne 
+		quadragalleryslider::deleteRow($id);
 		
-		foreach(array_keys($_POST) as $key){
-			quadragalleryslider::insert_data($key);
-			break;
-		}
+		quadragalleryslider::insertData();
 	}
 
 	function addData(){
 		
-		if($_POST['title']!= "" || $_POST['link'] != ""){
-			$this->resize_images($_FILES,Configuration::get('PS_QUADRA_SLIDER_WIDTH'),Configuration::get('PS_QUADRA_SLIDER_HEIGHT'));//_MODULE_DIR_
+		if($_POST['title_1']!= "" || $_POST['link_1'] != "" || $_POST['title_2']!= "" || $_POST['link_2'] != ""){
+			$this->resizeImages($_FILES,Configuration::get('PS_QUADRA_SLIDER_WIDTH'),Configuration::get('PS_QUADRA_SLIDER_HEIGHT'));
 			foreach(array_keys($_FILES) as $key) {
 				$_POST['img']=_MODULE_DIR_."quadragalleryslider/images_big/".basename($_FILES['img']['name']);
 				$_POST['thumb']=_MODULE_DIR_."quadragalleryslider/images_small/".basename($_FILES['img']['name']);
 			}
 			//insertion des données dans la base
-			foreach(array_keys($_POST) as $key){
-				quadragalleryslider::insert_data($key);
-				break;
-			}
+			quadragalleryslider::insertData();
 		}
 	}
 	/**
@@ -186,8 +175,10 @@ class AdminGallerySlider extends AdminTab {
 		$this->displayListHeader();
 		if (!sizeof($this->_list))
 			echo '<tr><td class="center" colspan="'.(sizeof($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
+
 		/* Show the content of the table */
 		$this->displayListContent();
+
 		/* Close list table and submit button */
 		$this->displayListFooter();
 	}
@@ -196,8 +187,8 @@ class AdminGallerySlider extends AdminTab {
     
     	global $currentIndex, $cookie;
     	$id_lang = $cookie->id_lang;
+    	
     	$id_category = 1; // default categ
-
         $irow = 0;
         if ($this->_list AND isset($this->fieldsDisplay['position'])) {
             $positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
@@ -210,6 +201,7 @@ class AdminGallerySlider extends AdminTab {
             $keyToGet = 'id_' . ($isCms ? 'cms_' : '') . 'category' . (in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '');
         
             foreach ($this->_list AS $i=>$tr) {
+            	if($tr['id_lang']== $id_lang){
 		            $id = $tr[$this->identifier];
 		            echo '<tr' . (array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="tr_' . (($id_category = (int) (Tools::getValue('id_' . ($isCms ? 'cms_' : '') . 'category', '1'))) ? $id_category : '') . '_' . $id . '_' . $tr['position'] . '"' : '') . ($irow++ % 2 ? ' class="alt_row"' : '') . ' ' . ((isset($tr['color']) AND $this->colorOnBackground) ? 'style="background-color: ' . $tr['color'] . '"' : '') . '>
 									<td class="center">';
@@ -228,7 +220,7 @@ class AdminGallerySlider extends AdminTab {
 			               echo '>';
 			                        
 			    		if ($key =="thumb"){
-			    			echo '<img src="'.$tr[$key].'">';//$tr[$key];
+			    			echo '<img src="'.$tr[$key].'">';
 			    		}
 			    		if ($key =="title"){
 			    			echo $tr[$key];
@@ -248,11 +240,11 @@ class AdminGallerySlider extends AdminTab {
 			               echo '</td>';
 			       }
 	      		   echo '</tr>';
+            	}
             }
         }
     }
-
-	public function display()
+public function display()
 	{
 		global $currentIndex, $cookie;
 
@@ -294,75 +286,150 @@ class AdminGallerySlider extends AdminTab {
 			$this->includeSubTab('display');
 		}
 	}
+	/**
+	 * Close list table and submit button
+	 */
+	public function displayListFooter($token = NULL)
+	{
+		echo '</table>';
+		if ($this->delete)
+			echo '<p><input type="submit" class="button" name="submitDel'.$this->table.'" value="'.$this->l('Delete selection').'" onclick="return confirm(\''.$this->l('Delete selected items?', __CLASS__, TRUE, FALSE).'\');" /></p>';
+		echo '
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="token" value="'.($token ? $token : $this->token).'" />
+		</form>';
+		if (isset($this->_includeTab) AND sizeof($this->_includeTab))
+			echo '<br /><br />';
+	}
+		    
 	protected function _displayForm() {
 		
-		global $currentIndex;
+		global $currentIndex, $cookie;
+		$languages = Language::getLanguages(false);
+		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT')); //default language of store
 		
-		$this->_html = '
+		echo '
 		<form method="post" action="'.$currentIndex.'&token='.Tools::getValue('token').'" enctype="multipart/form-data">
 		<input type="hidden" name="id_slider" id="id_slider" value="'.Tools::getValue('id_quadragalleryslider').'" />
 		<fieldset>';
 		
 		if(Tools::isSubmit('add'.$this->table)){
-					
-			$this->_html .= '
+			echo '
 				<div style="float:left;">
 					'.($this->l('Add') ).'
 				</div><div style="float:left;">
-					<label>'.$this->l('Image').'</label>
-					<div class="margin-form">
-						<input type="file" name="img" />
-					</div>
-					<label>'.$this->l('Image Title').'</label>
-					<div class="margin-form">
-						<input type="text" name="title" size="64" value="" /></div>
-					<label>'.$this->l('Link').'</label>
-					<div class="margin-form">
-						<input type="text" name="link" size="64" value="" />
-					</div>
+				<table>
+					<tr>
+						<td style="vertical-align:top;width:150px;">
+							<label>'.$this->l('Image').'</label>
+						</td>
+						<td>	
+							<input type="file" name="img" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top;width:150px;">		
+							<label>'.$this->l('Image Title').'</label>
+						</td>
+						<td>';
+							foreach ($languages as $language)	
+								echo '<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';">
+									<input type="text" name="title_'.$language['id_lang'].'" size="64" value="" />
+								</div>';
+							$this->displayFlags($languages, $defaultLanguage, 'title¤link', 'title');
+							echo '
+						</td>	
+					</tr>
+					<tr>
+						<td style="vertical-align:top;width:150px;">
+							<label>'.$this->l('Link').'</label>
+						</td>
+						<td>';
+							foreach ($languages as $language)			
+								echo '<div id="link_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';">
+										<input type="text" name="link_'.$language['id_lang'].'" size="64" value="" />
+									</div>';
+							$this->displayFlags($languages, $defaultLanguage, 'link¤title', 'link');
+							echo '
+						</td>
+					</tr>
+				</table>			
 				</div>
 				<hr class="clear"/>';
 			
-			$this->_html .= '
+			echo '
 			<div class="margin-form clear"><input type="submit" name="submitConfAdd" value="'.$this->l('Save').'" class="button" /></div>
 			</fieldset>
 		</form>';
-		echo $this->_html;	
 		}
 		else if(Tools::isSubmit('update'.$this->table)){
 			
-			$datas = quadragalleryslider::retrieve_data($_GET['id_quadragalleryslider']);
+			$datas = quadragalleryslider::retrieveData($_GET['id_quadragalleryslider']);
+			$texts = quadragalleryslider::selectForAllLanguages(Tools::getValue('id_quadragalleryslider'));
 			if(isset($datas)){
 				foreach ($datas as $i => $row) {
+					
 					$isFile2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['image']);
 					$isThumb2 = is_file($_SERVER['DOCUMENT_ROOT'].$row['thumb']);
 					
-					$this->_html .= '
-					<div style="float:left;">
-						'.($isThumb2 ? '<img src="'.$row['thumb'].'"name="thumb['.$i.']" alt="'.$row['title'].'" title="'.$row['title'].'"/>' : $this->l('Add') ).'
-					</div><div style="float:left;">
-						<label>'.$this->l('Image').'</label>
-						<div class="margin-form">
+				echo '
+				<div style="float:left;">
+						'.($isThumb2 ? '<img src="'.$row['thumb'].'"name="thumb['.$i.']" "/>' : $this->l('Add') ).'
+				</div><div style="float:left;">
+				<table>
+					<tr>
+						<td style="vertical-align:top;width:150px;">
+							<label>'.$this->l('Image').'</label>
+						</td>
+						<td>	
 							<input type="file" name="img'.$i.'" />
 							'.($isFile2 ? '<input type="hidden" name="img['.$i.']" value="'.$row['image'].'"/>' : '' ).'
-						</div>
-						<label>'.$this->l('Image Title').'</label>
-						<div class="margin-form">
-							<input type="text" name="title['.$i.']" size="64" value="'.($row['title'] ? stripslashes(htmlspecialchars($row['title'])) : '').'" /></div>
-						<label>'.$this->l('Link').'</label>
-						<div class="margin-form">
-							<input type="text" name="link['.$i.']" size="64" value="'.($row['link'] ? stripslashes(htmlspecialchars($row['link'])) : '').'" />
-						</div>
-					</div>
-					<hr class="clear"/>';
-				}
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top;width:150px;">		
+							<label>'.$this->l('Image Title').'</label>
+						</td>
+						<td>';
+						foreach ($texts as $text) {
+							foreach ($languages as $language)
+								if($text['id_lang'] == $language['id_lang'])
+									echo '<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';">
+										<input type="text" name="title_'.$language['id_lang'].'" size="64" value="'.($text['title'] ? stripslashes(htmlspecialchars($text['title'])) : '').'" />
+									</div>';
+						}			
+						$this->displayFlags($languages, $defaultLanguage, 'link¤title', 'title');
+						echo '
+						</td>	
+					</tr>
+					<tr>
+						<td style="vertical-align:top;width:150px;">
+							<label>'.$this->l('Link').'</label>
+						</td>
+						<td>';
+						foreach ($texts as $text) {	
+							foreach ($languages as $language)
+								if($text['id_lang']== $language['id_lang'])				
+									echo '<div id="link_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';">
+											<input type="text" name="link_'.$language['id_lang'].'" size="64" value="'.($text['link'] ? stripslashes(htmlspecialchars($text['link'])) : '').'" />
+										</div>';
+						}			
+						$this->displayFlags($languages, $defaultLanguage, 'link¤title', 'link');
+						echo '
+						</td>
+					</tr>
+				</table>			
+				</div>
+				<hr class="clear"/>';
+					
+				}	
 			}
-			
-			$this->_html .= '
+			echo '
 			<div class="margin-form clear"><input type="submit" name="submitConfUpdate" value="'.$this->l('Save').'" class="button" /></div>
 			</fieldset>
 		</form>';
-		echo $this->_html;	
 		}
 	}
     
@@ -379,12 +446,24 @@ class AdminGallerySlider extends AdminTab {
 		{
 			$this->updateData($_POST['id_slider']);
 			
+		}elseif(Tools::isSubmit('submitDel'.$this->table))
+		{
+			if (isset($_POST[$this->table.'Box'])){
+				$selectedList = $_POST[$this->table.'Box'];
+				foreach($selectedList as $item){
+					$datas = quadragalleryslider::retrieveData($item);
+					foreach($datas as $i => $row){
+						quadragalleryslider::deleteRow($row['id_quadragalleryslider']);
+						quadragalleryslider::removeImages($row['image']);
+					}
+				}
+			}		
 		}else if(Tools::isSubmit('delete'.$this->table))
 		{
-			$datas = quadragalleryslider::retrieve_data($id_quadragalleryslider);
+			$datas = quadragalleryslider::retrieveData($id_quadragalleryslider);
 			foreach($datas as $i => $row){
-				quadragalleryslider::delete_row($row['id_quadragalleryslider']);
-				quadragalleryslider::remove_images($row['image']);
+				quadragalleryslider::deleteRow($row['id_quadragalleryslider']);
+				quadragalleryslider::removeImages($row['image']);
 			}
 		}
         //return parent::postProcess();

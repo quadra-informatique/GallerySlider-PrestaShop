@@ -24,7 +24,7 @@
 	</script>
 	{/literal}
 	
-		<div id="homeslide" class="horinaja" {if $v_display eq 1}style="height:{$box_height}px;border: 1px solid;"{else} {if $thumbs neq ""} style="height:{$image_height+$v_height*3/2}px;border: 1px solid;"{/if} {/if}>
+		<div id="homeslide" class="horinaja" {if $v_display eq 1}style="height:{$box_height}px;"{else} {if $thumbs neq ""} style="height:{$image_height+$v_height*3/2}px;"{/if} {/if}>
 			<!-- div id="big_picture" style="display:none;"></div-->
 			<ul id="" class="">
 				{foreach from=$thumbs key=idx item=curThumb}
