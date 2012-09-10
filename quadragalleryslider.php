@@ -31,7 +31,7 @@ class QuadraGallerySlider extends Module {
 	function __construct() {
 		$this->name = 'quadragalleryslider';
 		$this->tab = '';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->module_key = "f6f656f46178481af36fde4d8e95821e";
 
 		parent::__construct();
