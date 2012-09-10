@@ -2,7 +2,7 @@
 <module>
 	<name>quadragalleryslider</name>
 	<displayName><![CDATA[Block Images Gallery Slider]]></displayName>
-	<version><![CDATA[1.0]]></version>
+	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[Display thumbs of uploaded images in homepage, and show a slider of the images]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[]]></tab>

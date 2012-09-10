@@ -15,7 +15,7 @@
  *
  * @author Quadra Informatique <ecommerce@quadra-informatique.fr>
  * @copyright 1997-2012 Quadra Informatique
- * @version Release: $Revision: 1.0 $
+ * @version Release: $Revision: 1.1 $
  * @license http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *
  * ---------------------------------------------------------------------------------
